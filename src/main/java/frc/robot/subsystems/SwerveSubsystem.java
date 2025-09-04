@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 import frc.robot.Constants;
 import frc.robot.Constants.Swerve;
 
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -32,6 +33,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveSubsystem extends SubsystemBase {
+
+    private MotionMagicVelocityVoltage mmVelocityRequest = new MotionMagicVelocityVoltage(0);
+
     // Create SwerveModules
     private final SwerveModule frontLeftModule = new SwerveModule(
         FRONT_LEFT_DRIVING_CAN_ID,
@@ -114,6 +118,7 @@ public class SwerveSubsystem extends SubsystemBase {
             Constants.PathPlanner.MOMENT_OF_INERTIA, 
             moduleConfig, 
             moduleOffsets);
+
         // robotConfig = RobotConfig.fromGUISettings();
         // try {
         //     robotConfig = RobotConfig.fromGUISettings();
@@ -144,6 +149,7 @@ public class SwerveSubsystem extends SubsystemBase {
             },
             this // Reference to this subsystem to set requirements
     );
+    
     }
 
     /**

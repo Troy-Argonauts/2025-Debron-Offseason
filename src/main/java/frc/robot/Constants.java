@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -50,9 +52,8 @@ public final class Constants {
         public static final double DRIVE_V = 0;
         public static final double DRIVE_A = 0.0;
 
-        // public static final double MOTION_MAGIC_ACCEL = 400;
-        // public static final double MOTION_MAGIC_JERK = 3000;
-        
+        public static final double DRIVE_MM_ACCELERATION = 0;
+        public static final double DRIVE_MM_JERK = 0;      
 
         // public static final double DRIVE_P = 2;
         // public static final double DRIVE_I = 0;
@@ -65,6 +66,12 @@ public final class Constants {
         public static final double TURN_I = 0.0;
         public static final double TURN_D = 0.0;
         public static final double TURN_S = 0.0; // 20
+        public static final double TURN_V = 0.0;
+        public static final double TURN_A = 0.0;
+
+        public static final double TURN_MM_CRUISE_VELOCITY = 0;
+        public static final double TURN_MM_ACCELERATION = 0;
+        public static final double TURN_MM_JERK = 0;
 
         public static final int DRIVE_MOTOR_PINION_TEETH = 14;
         public static final double WHEEL_DIAMETER_METERS = 0.1016;
