@@ -60,6 +60,8 @@ public class Robot extends TimedRobot {
 
         getClimber().resetArmEncoders();
 
+        
+
 
         // CameraServer.startAutomaticCapture().setFPS(14);
     }

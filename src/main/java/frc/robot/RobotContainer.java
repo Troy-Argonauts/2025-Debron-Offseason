@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -53,7 +54,7 @@ public class RobotContainer {
     public Trigger intakeTrigger;
     public Trigger elevatorTrigger;
 
-    private final SendableChooser<Command> autoChooser;
+    private final AutoChooser autoChooser;
 
 
     public static Command P2_Cross;
@@ -84,13 +85,15 @@ public class RobotContainer {
           Robot.getDrivetrain()::followTrajectory, true, Robot.getDrivetrain());
 
         configureBindings();
-        autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooser.addOption("Do Nothing", new WaitCommand(10.0));
-        autoChooser.addOption("TestAuton", new TestAuton());
-        autoChooser.addOption("DriveX", new DriveX(2, Robot.getDrivetrain()));
+        autoChooser = new AutoChooser();
+        // autoChooser.addOption("Do Nothing", new WaitCommand(10.0));
+        // autoChooser.addOption("TestAuton", new TestAuton());
+        // autoChooser.addOption("DriveX", new DriveX(2, Robot.getDrivetrain()));
         // autoChooser.addOption("Test P2_Cross", new ScoreLV4());
         // autoChooser.addOption("Test1", P2_Cross);
+        autoChooser.addCmd("CrossStart", this::crossStart);
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
     }
 
     private void registerNamedCommands() {
@@ -335,11 +338,18 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-      return autoChooser.getSelected();
+      return autoChooser.selectedCommand();
     }
 
     public void setFieldCentric(boolean state) {
       field_centric = state;
+    }
+
+    public Command crossStart() {
+      return Commands.sequence(
+        driveAutoFactory.resetOdometry("CrossStart"),
+        driveAutoFactory.trajectoryCmd("CrossStart")
+      );
     }
 
 }
