@@ -16,6 +16,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -86,10 +87,9 @@ public class SwerveSubsystem extends SubsystemBase {
     private ModuleConfig moduleConfig;
     private RobotConfig robotConfig;
 
-    public PIDController pidX = new PIDController(0, 0, 0);
-    public PIDController pidY = new PIDController(0, 0, 0);
-    public PIDController pidRot = new PIDController(0, 0, 0);
-
+    public PIDController xController = new PIDController(0, 0, 0);
+    public PIDController yController = new PIDController(0, 0, 0);
+    public PIDController headingController = new PIDController(0, 0, 0);
 
     // Odometry class for tracking robot pose
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
@@ -101,6 +101,8 @@ public class SwerveSubsystem extends SubsystemBase {
             backLeftModule.getPosition(),
             backRightModule.getPosition()
     });
+
+    
 
     public SwerveSubsystem() {
         moduleConfig = new ModuleConfig(
@@ -121,7 +123,7 @@ public class SwerveSubsystem extends SubsystemBase {
         //     e.printStackTrace();
         // }
 
-            AutoBuilder.configure(
+        AutoBuilder.configure(
             this::getPose, // Robot pose supplier
             this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -143,7 +145,20 @@ public class SwerveSubsystem extends SubsystemBase {
               return false;
             },
             this // Reference to this subsystem to set requirements
-    );
+        );
+        
+        headingController.enableContinuousInput(-Math.PI, Math.PI);
+    }
+
+    public void followTrajectory(SwerveSample sample) {
+        Pose2d pose = getPose();
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            sample.vx + xController.calculate(pose.getX(), sample.x),
+            sample.vy + yController.calculate(pose.getY(), sample.y),
+            sample.omega + xController.calculate(pose.getRotation().getRadians(), sample.heading)
+        );
+
+        pathPlannerDrive(speeds, true);
     }
 
     /**
