@@ -71,6 +71,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
     public boolean xState = false;
+    public boolean zState = false;
 
     public boolean slow = false;
 
@@ -230,10 +231,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Gyro Angle", gyro.getYaw().getValueAsDouble());
         
-        // SmartDashboard.putNumber("FL Drive Encoder", frontLeftModule.driveValue);
-        // SmartDashboard.putNumber("FR Drive Encoder", frontRightModule.driveValue);
-        // SmartDashboard.putNumber("BL Drive Encoder", backLeftModule.driveValue);
-        // SmartDashboard.putNumber("BR Drive Encoder", backRightModule.driveValue);
+        SmartDashboard.putNumber("FL Drive Encoder", frontLeftModule.driveValue);
+        SmartDashboard.putNumber("FR Drive Encoder", frontRightModule.driveValue);
+        SmartDashboard.putNumber("BL Drive Encoder", backLeftModule.driveValue);
+        SmartDashboard.putNumber("BR Drive Encoder", backRightModule.driveValue);
 
 
         SmartDashboard.putNumber("FL Drive Encoder Velocity", frontLeftModule.getVelocity());
@@ -246,6 +247,11 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("FR Desired State Velocity", frontRightModule.desiredState.speedMetersPerSecond);
         SmartDashboard.putNumber("BL Desired State Velocity", backLeftModule.desiredState.speedMetersPerSecond);
         SmartDashboard.putNumber("BR Desired State Velocity", backRightModule.desiredState.speedMetersPerSecond);
+
+        SmartDashboard.putNumber("FL Turn Angle", frontLeftModule.getAngle());
+        SmartDashboard.putNumber("FR Turn Angle", frontRightModule.getAngle());
+        SmartDashboard.putNumber("BL Turn Angle", backLeftModule.getAngle());
+        SmartDashboard.putNumber("BR Turn Angle", backRightModule.getAngle());
     }
 
 
@@ -302,12 +308,19 @@ public class SwerveSubsystem extends SubsystemBase {
             rotCorrected = rot;
         }
 
-        if (xState){
-            frontLeftModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-            frontRightModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-            backLeftModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-            backRightModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        } else {
+        if (xState && !zState){
+            frontLeftModule.setDesiredState(new SwerveModuleState(4.5, Rotation2d.fromDegrees(0)));
+            frontRightModule.setDesiredState(new SwerveModuleState(4.5, Rotation2d.fromDegrees(0)));
+            backLeftModule.setDesiredState(new SwerveModuleState(4.5, Rotation2d.fromDegrees(0)));
+            backRightModule.setDesiredState(new SwerveModuleState(4.5, Rotation2d.fromDegrees(0)));
+        }
+        else if (!xState && zState){
+            frontLeftModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+            frontRightModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+            backLeftModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+            backRightModule.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+        }
+         else {
             if (rateLimit) {
                 // Convert XY to polar for rate limiting
                 double inputTranslationDir = Math.atan2(ySpeedCorrected, xSpeedCorrected);
@@ -376,7 +389,15 @@ public class SwerveSubsystem extends SubsystemBase {
    */
     public void setXState(boolean state) {
         xState = state;
+        zState = false;
     }
+
+    public void setZState(boolean state) {
+        zState = state;
+        xState = false;
+    }
+
+
 
    /**
    * Sets the wheels into an X formation to prevent movement.

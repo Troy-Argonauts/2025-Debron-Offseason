@@ -128,6 +128,7 @@ public class SwerveModule extends SubsystemBase{
      */
     @Override
     public void periodic() {
+        
         driveValue = driveMotor.getPosition().getValueAsDouble();
         turnEncoderValue = getAngle();
         turnEncoderRotation = turnEncoder.getPosition().getValueAsDouble();
@@ -141,6 +142,7 @@ public class SwerveModule extends SubsystemBase{
         SmartDashboard.putNumber("Corrected Speed", globalDesiredState.speedMetersPerSecond);
         SmartDashboard.putNumber("Desired State Rotation", desiredState.angle.getDegrees());
         SmartDashboard.putNumber("Desired State Speed", desiredState.speedMetersPerSecond);
+        SmartDashboard.putNumber("Current Speed", driveMotor.getVelocity().getValueAsDouble() * WHEEL_CIRCUMFERENCE_METERS / Constants.Swerve.DRIVING_MOTOR_REDUCTION);
 
     }
 
@@ -184,9 +186,6 @@ public class SwerveModule extends SubsystemBase{
         // Optimize the reference state to avoid spinning further than 90 degrees.
         correctedDesiredState.optimize(Rotation2d.fromDegrees(turnEncoderValue));
 
-        // Command driving and turning motors towards their respective setpoints (velocity and position).
-        // turnMotor.setControl(positionVoltage.withPosition(correctedDesiredState.angle.getDegrees() / 360));
-        // driveMotor.setControl(mmRequest.withVelocity(correctedDesiredState.speedMetersPerSecond / WHEEL_CIRCUMFERENCE_METERS));
 
         
 
