@@ -29,6 +29,7 @@ import frc.robot.commands.ClimberRun;
 import frc.robot.commands.ClimberTongueOUT;
 import frc.robot.commands.Home;
 import frc.robot.commands.Intake;
+import frc.robot.commands.autonomous.CrossStart;
 import frc.robot.commands.autonomous.DriveX;
 
 import frc.robot.commands.autonomous.ScoreLV4;
@@ -82,6 +83,7 @@ public class RobotContainer {
         autoChooser.addOption("DriveX", new DriveX(2, Robot.getDrivetrain()));
         // autoChooser.addOption("Test P2_Cross", new ScoreLV4());
         // autoChooser.addOption("Test1", P2_Cross);
+        autoChooser.addOption("Cross_START", new CrossStart());
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -127,7 +129,7 @@ public class RobotContainer {
                         ? driver.getRightX()
                         : 0;
 
-                    Robot.getDrivetrain().drive(ySpeed * 0.5, xSpeed * 0.5, rotSpeed * 0.5, field_centric, true);
+                    Robot.getDrivetrain().drive(ySpeed * 1, xSpeed * 1, rotSpeed * 1, field_centric, true);
                   }, Robot.getDrivetrain()
 
                 ));
