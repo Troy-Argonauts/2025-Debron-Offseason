@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import choreo.Choreo;
 import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.math.filter.Debouncer;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Manipulator.ManipulatorStates;
 import frc.robot.subsystems.Tongue.TongueStates;
@@ -62,7 +64,10 @@ public class RobotContainer {
 
     private final AutoFactory driveAutoFactory;
 
+    // trajectory = Choreo.
+
     public RobotContainer() {
+
       // try {
       //   PathPlannerPath P2_Cross_file = PathPlannerPath.fromPathFile("P2_Cross");
       //   P2_Cross = AutoBuilder.followPath(P2_Cross_file);
@@ -93,6 +98,7 @@ public class RobotContainer {
         // autoChooser.addOption("Test1", P2_Cross);
         autoChooser.addCmd("CrossStart", this::crossStart);
         SmartDashboard.putData("Auto Chooser", autoChooser);
+        RobotModeTriggers.autonomous().whileTrue(autoChooser.selectedCommandScheduler());
 
     }
 
@@ -338,7 +344,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-      return autoChooser.selectedCommand();
+      // return autoChooser.selectedCommand();
+      return null;
     }
 
     public void setFieldCentric(boolean state) {
@@ -351,5 +358,4 @@ public class RobotContainer {
         driveAutoFactory.trajectoryCmd("CrossStart")
       );
     }
-
 }

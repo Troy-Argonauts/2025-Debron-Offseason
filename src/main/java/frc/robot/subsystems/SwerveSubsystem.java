@@ -87,9 +87,9 @@ public class SwerveSubsystem extends SubsystemBase {
     private ModuleConfig moduleConfig;
     private RobotConfig robotConfig;
 
-    public PIDController xController = new PIDController(0, 0, 0);
-    public PIDController yController = new PIDController(0, 0, 0);
-    public PIDController headingController = new PIDController(0, 0, 0);
+    public PIDController xController = new PIDController(10, 0, 0);
+    public PIDController yController = new PIDController(10, 0, 0);
+    public PIDController headingController = new PIDController(7.5, 0, 0);
 
     // Odometry class for tracking robot pose
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
@@ -546,4 +546,5 @@ public class SwerveSubsystem extends SubsystemBase {
    public double getFrontMeterValue(){
         return (frontLeftModule.getFrontPositionMeters() + frontRightModule.getFrontPositionMeters()) / 2;
     }
+
 }
