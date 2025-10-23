@@ -7,7 +7,7 @@ public class CrossStart extends SequentialCommandGroup{
 
     public CrossStart(){
         super(
-            new DriveX(-0.25, Robot.getDrivetrain()).withTimeout(0.75), //-1.25
+            new DriveX(-0.25, Robot.getDrivetrain()).withTimeout(2), //-1.25
             
             new DriveX(0, Robot.getDrivetrain()).withTimeout(0.5)
         );

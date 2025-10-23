@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 // Necessary imports for our SwerveModule
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -38,14 +40,20 @@ public class SwerveModule extends SubsystemBase{
     public double turnEncoderValue = 0;
     public double turnEncoderRotation = 0;
 
-    private TalonFXConfiguration config = new TalonFXConfiguration();
+    private TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration();
+    private TalonFXConfiguration turnTalonConfig = new TalonFXConfiguration();
     public SwerveModuleState globalDesiredState = new SwerveModuleState();
 
-    PositionVoltage positionVoltage = new PositionVoltage(0).withSlot(1);
-    VelocityVoltage velocityVoltage = new VelocityVoltage(0).withSlot(0);
-    private Slot0Configs driveConfig = config.Slot0;
-    private Slot1Configs turnConfig = config.Slot1;
+    MotionMagicVoltage turnMMVoltage = new MotionMagicVoltage(0).withSlot(1);
+    MotionMagicVelocityVoltage driveMMVoltage = new MotionMagicVelocityVoltage(0).withSlot(0);
+    
+    
+    MotionMagicConfigs driveMMConfig = driveTalonConfig.MotionMagic;
+    MotionMagicConfigs turnMMConfig = turnTalonConfig.MotionMagic;
 
+    private Slot0Configs driveSlotConfig = driveTalonConfig.Slot0;
+    private Slot1Configs turnSlotConfig = turnTalonConfig.Slot1;
+    
     public SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
     private double chassisAngularOffset;
 
@@ -59,45 +67,55 @@ public class SwerveModule extends SubsystemBase{
         encoderConfigs.MagnetSensor.MagnetOffset = chassisAngularOffset; // make sure this is in rotations
         turnEncoder.getConfigurator().apply(encoderConfigs);
 
-        TalonFXConfiguration turnConfigs = new TalonFXConfiguration();
-        turnConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        turnConfigs.ClosedLoopGeneral.ContinuousWrap = true;
-        turnConfigs.Feedback.FeedbackRemoteSensorID = turnEncoder.getDeviceID();
-        turnConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        turnConfigs.CurrentLimits.SupplyCurrentLimit = TURNING_MOTOR_CURRENT_LIMIT;
-        turnConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        turnMotor.getConfigurator().apply(turnConfigs);
+        TalonFXConfiguration turnSlotConfigs = new TalonFXConfiguration();
+        turnTalonConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        turnTalonConfig.ClosedLoopGeneral.ContinuousWrap = true;
+        turnTalonConfig.Feedback.FeedbackRemoteSensorID = turnEncoder.getDeviceID();
+        turnTalonConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        turnTalonConfig.CurrentLimits.SupplyCurrentLimit = TURNING_MOTOR_CURRENT_LIMIT;
+        turnTalonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        turnSlotConfig.kP = TURN_P;
+        turnSlotConfig.kI = TURN_I;
+        turnSlotConfig.kD = TURN_D;
+        turnSlotConfig.kS = TURN_S;
+        turnSlotConfig.kV = TURN_V;
+        turnSlotConfig.kA = TURN_A;
+        turnMotor.getConfigurator().apply(turnSlotConfigs);
 
-        driveConfig.kP = DRIVE_P;
-        driveConfig.kI = DRIVE_I;
-        driveConfig.kD = DRIVE_D;
-        driveConfig.kS = DRIVE_S;
-        driveConfig.kV = DRIVE_V;
+        turnMMConfig.MotionMagicCruiseVelocity = TURN_MM_CRUISE_VELOCITY;
+        turnMMConfig.MotionMagicAcceleration = TURN_MM_ACCELERATION;
+        turnMMConfig.MotionMagicJerk = TURN_MM_JERK;
 
-        // mmConfig.MotionMagicAcceleration = Constants.Swerve.MOTION_MAGIC_ACCEL;
-        // mmConfig.MotionMagicJerk = Constants.Swerve.MOTION_MAGIC_JERK;
-        
-        TalonFXConfiguration driveConfigs = new TalonFXConfiguration();
+        turnMotor.getConfigurator().apply(turnTalonConfig);
+
+        driveSlotConfig.kP = DRIVE_P;
+        driveSlotConfig.kI = DRIVE_I;
+        driveSlotConfig.kD = DRIVE_D;
+        driveSlotConfig.kS = DRIVE_S;
+        driveSlotConfig.kV = DRIVE_V;
 
         if (driveInverted){
-            driveConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-            driveConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-            driveConfigs.CurrentLimits.SupplyCurrentLimit = DRIVING_MOTOR_CURRENT_LIMIT;
-            driveMotor.getConfigurator().apply(driveConfigs);
+            driveTalonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            driveTalonConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+            driveTalonConfig.CurrentLimits.SupplyCurrentLimit = DRIVING_MOTOR_CURRENT_LIMIT;
+            driveMMConfig.MotionMagicAcceleration = DRIVE_MM_ACCELERATION;
+            driveMMConfig.MotionMagicJerk = DRIVE_MM_JERK;
+        
+            driveMotor.getConfigurator().apply(driveTalonConfig);
         } else {
-            driveConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-            driveConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-            driveConfigs.CurrentLimits.SupplyCurrentLimit = DRIVING_MOTOR_CURRENT_LIMIT;
-            driveMotor.getConfigurator().apply(driveConfigs);
+            driveTalonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            driveTalonConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            driveTalonConfig.CurrentLimits.SupplyCurrentLimit = DRIVING_MOTOR_CURRENT_LIMIT;
+            driveMMConfig.MotionMagicAcceleration = DRIVE_MM_ACCELERATION;
+            driveMMConfig.MotionMagicJerk = DRIVE_MM_JERK;
+            driveMotor.getConfigurator().apply(driveTalonConfig);
             
         }
-        turnConfig.kP = TURN_P;
-        turnConfig.kI = TURN_I;
-        turnConfig.kD = TURN_D;
-        turnConfig.kS = TURN_S;
 
-        turnMotor.getConfigurator().apply(turnConfig);
-        driveMotor.getConfigurator().apply(driveConfig);
+        turnMotor.getConfigurator().apply(turnSlotConfig);
+        driveMotor.getConfigurator().apply(driveSlotConfig);
+
+
 
         //RESET ENCODERS
         resetDriveEncoder();
@@ -110,19 +128,21 @@ public class SwerveModule extends SubsystemBase{
      */
     @Override
     public void periodic() {
+        
         driveValue = driveMotor.getPosition().getValueAsDouble();
         turnEncoderValue = getAngle();
         turnEncoderRotation = turnEncoder.getPosition().getValueAsDouble();
 
 
-        turnMotor.setControl(positionVoltage.withPosition(globalDesiredState.angle.getDegrees() / 360));
+        turnMotor.setControl(turnMMVoltage.withPosition(globalDesiredState.angle.getDegrees() / 360));
         // driveMotor.setControl(mmRequest.withVelocity(globalDesiredState.speedMetersPerSecond * Constants.Swerve.DRIVING_MOTOR_REDUCTION / WHEEL_CIRCUMFERENCE_METERS));
-        driveMotor.setControl(velocityVoltage.withVelocity(globalDesiredState.speedMetersPerSecond * Constants.Swerve.DRIVING_MOTOR_REDUCTION / WHEEL_CIRCUMFERENCE_METERS));
+        driveMotor.setControl(driveMMVoltage.withVelocity(globalDesiredState.speedMetersPerSecond * Constants.Swerve.DRIVING_MOTOR_REDUCTION / WHEEL_CIRCUMFERENCE_METERS));
 
         SmartDashboard.putNumber("Corrected Rotation", globalDesiredState.angle.getDegrees() / 360);
         SmartDashboard.putNumber("Corrected Speed", globalDesiredState.speedMetersPerSecond);
         SmartDashboard.putNumber("Desired State Rotation", desiredState.angle.getDegrees());
         SmartDashboard.putNumber("Desired State Speed", desiredState.speedMetersPerSecond);
+        SmartDashboard.putNumber("Current Speed", driveMotor.getVelocity().getValueAsDouble() * WHEEL_CIRCUMFERENCE_METERS / Constants.Swerve.DRIVING_MOTOR_REDUCTION);
 
     }
 
@@ -166,9 +186,6 @@ public class SwerveModule extends SubsystemBase{
         // Optimize the reference state to avoid spinning further than 90 degrees.
         correctedDesiredState.optimize(Rotation2d.fromDegrees(turnEncoderValue));
 
-        // Command driving and turning motors towards their respective setpoints (velocity and position).
-        // turnMotor.setControl(positionVoltage.withPosition(correctedDesiredState.angle.getDegrees() / 360));
-        // driveMotor.setControl(mmRequest.withVelocity(correctedDesiredState.speedMetersPerSecond / WHEEL_CIRCUMFERENCE_METERS));
 
         
 
@@ -183,11 +200,11 @@ public class SwerveModule extends SubsystemBase{
     //     CANcoderConfiguration encoderConfigs = new CANcoderConfiguration();
     //     encoderConfigs.MagnetSensor.MagnetOffset = chassisAngularOffset; // make sure this is in rotations
 
-    //     TalonFXConfiguration turnConfigs = new TalonFXConfiguration();
-    //     turnConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    //     turnConfigs.ClosedLoopGeneral.ContinuousWrap = true;
-    //     turnConfigs.Feedback.FeedbackRemoteSensorID = turnEncoder.getDeviceID();
-    //     turnConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    //     TalonFXConfiguration turnSlotConfigs = new TalonFXConfiguration();
+    //     turnSlotConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    //     turnSlotConfigs.ClosedLoopGeneral.ContinuousWrap = true;
+    //     turnSlotConfigs.Feedback.FeedbackRemoteSensorID = turnEncoder.getDeviceID();
+    //     turnSlotConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
     // }
 
 

@@ -29,6 +29,7 @@ import frc.robot.commands.ClimberRun;
 import frc.robot.commands.ClimberTongueOUT;
 import frc.robot.commands.Home;
 import frc.robot.commands.Intake;
+import frc.robot.commands.autonomous.CrossStart;
 import frc.robot.commands.autonomous.DriveX;
 
 import frc.robot.commands.autonomous.ScoreLV4;
@@ -82,6 +83,7 @@ public class RobotContainer {
         autoChooser.addOption("DriveX", new DriveX(2, Robot.getDrivetrain()));
         // autoChooser.addOption("Test P2_Cross", new ScoreLV4());
         // autoChooser.addOption("Test1", P2_Cross);
+        autoChooser.addOption("Cross_START", new CrossStart());
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -98,11 +100,11 @@ public class RobotContainer {
      */
     private void configureBindings() {
 
-      // elevatorTrigger.whileTrue(
-      //   new InstantCommand(() -> Robot.getDrivetrain().slowState(true))
-      // ).whileFalse(
-      //   new InstantCommand(() -> Robot.getDrivetrain().slowState(false))
-      // );
+      elevatorTrigger.whileTrue(
+        new InstantCommand(() -> Robot.getDrivetrain().slowState(true))
+      ).whileFalse(
+        new InstantCommand(() -> Robot.getDrivetrain().slowState(false))
+      );
 
       elevatorTrigger.whileTrue(
         new ParallelCommandGroup(
@@ -159,6 +161,12 @@ public class RobotContainer {
             new InstantCommand(() -> Robot.getDrivetrain().setXState(true), Robot.getDrivetrain())
         ).whileFalse(
             new InstantCommand(() -> Robot.getDrivetrain().setXState(false), Robot.getDrivetrain())
+        );
+
+        driver.y().whileTrue(
+            new InstantCommand(() -> Robot.getDrivetrain().setZState(true), Robot.getDrivetrain())
+        ).whileFalse(
+            new InstantCommand(() -> Robot.getDrivetrain().setZState(false), Robot.getDrivetrain())
         );
 
         // Robot.getClimber().setDefaultCommand(
