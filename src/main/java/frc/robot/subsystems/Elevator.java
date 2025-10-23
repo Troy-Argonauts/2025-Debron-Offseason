@@ -115,7 +115,7 @@ public class Elevator extends SubsystemBase {
         elevatorRightOutputCurrentLog.append(rightMotor.getSupplyCurrent().getValueAsDouble());
         elevatorEncoderLog.append(leftMotor.getPosition().getValueAsDouble());
 
-        //leftMotor.setControl(mmVoltage.withPosition(target));
+        leftMotor.setControl(mmVoltage.withPosition(target));
 
         SmartDashboard.putBoolean("Limit Inner Switch", getInnerBottomLimit());
         SmartDashboard.putBoolean("Limit Outer Switch", getOuterBottomLimit());
