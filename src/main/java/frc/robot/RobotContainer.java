@@ -79,8 +79,8 @@ public class RobotContainer {
         configureBindings();
         autoChooser = AutoBuilder.buildAutoChooser();
         autoChooser.addOption("Do Nothing", new WaitCommand(10.0));
-        autoChooser.addOption("TestAuton", new TestAuton());
-        autoChooser.addOption("DriveX", new DriveX(2, Robot.getDrivetrain()));
+        autoChooser.addOption("Drive Center Lv4 Score", new TestAuton());
+        // autoChooser.addOption("DriveX", new DriveX(2, Robot.getDrivetrain()));
         // autoChooser.addOption("Test P2_Cross", new ScoreLV4());
         // autoChooser.addOption("Test1", P2_Cross);
         autoChooser.addOption("Cross_START", new CrossStart());
@@ -99,7 +99,6 @@ public class RobotContainer {
      * Use this method to define your controller->command mappings.
      */
     private void configureBindings() {
-
       elevatorTrigger.whileTrue(
         new InstantCommand(() -> Robot.getDrivetrain().slowState(true))
       ).whileFalse(
