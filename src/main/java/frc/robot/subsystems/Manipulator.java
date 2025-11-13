@@ -118,7 +118,7 @@ public class Manipulator extends SubsystemBase {
     public void setManipState(ManipulatorStates state) {
         switch (state) {
             case REVERSE: 
-                setManipulatorRawPower(-0.15); 
+                setManipulatorRawPower(-0.1); 
                 break;
             case INTAKE: //FORWARD
                 setManipulatorRawPower(0.15);

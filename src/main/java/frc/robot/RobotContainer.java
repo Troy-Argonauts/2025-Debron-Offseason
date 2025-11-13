@@ -128,7 +128,7 @@ public class RobotContainer {
                         ? driver.getRightX()
                         : 0;
 
-                    Robot.getDrivetrain().drive(ySpeed * 0.5, xSpeed * 0.5, rotSpeed * 0.5, field_centric, true);
+                    Robot.getDrivetrain().drive(ySpeed * 0.75, xSpeed * 0.75, rotSpeed * 0.75, field_centric, true);
                   }, Robot.getDrivetrain()
 
                 ));
@@ -148,13 +148,24 @@ public class RobotContainer {
 
         driver.rightBumper().onTrue(
           new ParallelCommandGroup(
-            new InstantCommand(() -> Robot.getDrivetrain().slowState(true)),
-            new InstantCommand(() -> setFieldCentric(false)) 
+            new InstantCommand(() -> Robot.getDrivetrain().slowState(true))
+            // new InstantCommand(() -> setFieldCentric(false)) 
             )
-        ).whileFalse(
+        ).onFalse(
           new ParallelCommandGroup(new InstantCommand(() -> Robot.getDrivetrain().slowState(false)),
           new InstantCommand(() -> setFieldCentric(true)))
         );
+
+        driver.rightTrigger().onTrue(
+          new ParallelCommandGroup(
+            new InstantCommand(() -> Robot.getDrivetrain().slowState(true)),
+            new InstantCommand(() -> setFieldCentric(false)) 
+            )
+        ).onFalse(
+          new ParallelCommandGroup(new InstantCommand(() -> Robot.getDrivetrain().slowState(false)),
+          new InstantCommand(() -> setFieldCentric(true)))
+        );
+
 
         driver.x().whileTrue(
             new InstantCommand(() -> Robot.getDrivetrain().setXState(true), Robot.getDrivetrain())

@@ -231,27 +231,48 @@ public class SwerveSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Gyro Angle", gyro.getYaw().getValueAsDouble());
         
-        SmartDashboard.putNumber("FL Drive Encoder", frontLeftModule.driveValue);
-        SmartDashboard.putNumber("FR Drive Encoder", frontRightModule.driveValue);
-        SmartDashboard.putNumber("BL Drive Encoder", backLeftModule.driveValue);
-        SmartDashboard.putNumber("BR Drive Encoder", backRightModule.driveValue);
+        // SmartDashboard.putNumber("FL Drive Encoder", frontLeftModule.driveValue);
+        // SmartDashboard.putNumber("FR Drive Encoder", frontRightModule.driveValue);
+        // SmartDashboard.putNumber("BL Drive Encoder", backLeftModule.driveValue);
+        // SmartDashboard.putNumber("BR Drive Encoder", backRightModule.driveValue);
 
 
-        SmartDashboard.putNumber("FL Drive Encoder Velocity", frontLeftModule.getVelocity());
-        SmartDashboard.putNumber("FR Drive Encoder Velocity", frontRightModule.getVelocity());
-        SmartDashboard.putNumber("BL Drive Encoder Velocity", backLeftModule.getVelocity());
-        SmartDashboard.putNumber("BR Drive Encoder Velocity", backRightModule.getVelocity());
+        // SmartDashboard.putNumber("FL Drive Encoder Velocity", frontLeftModule.getVelocity());
+        // SmartDashboard.putNumber("FR Drive Encoder Velocity", frontRightModule.getVelocity());
+        // SmartDashboard.putNumber("BL Drive Encoder Velocity", backLeftModule.getVelocity());
+        // SmartDashboard.putNumber("BR Drive Encoder Velocity", backRightModule.getVelocity());
 
 
-        SmartDashboard.putNumber("FL Desired State Velocity", frontLeftModule.desiredState.speedMetersPerSecond);
-        SmartDashboard.putNumber("FR Desired State Velocity", frontRightModule.desiredState.speedMetersPerSecond);
-        SmartDashboard.putNumber("BL Desired State Velocity", backLeftModule.desiredState.speedMetersPerSecond);
-        SmartDashboard.putNumber("BR Desired State Velocity", backRightModule.desiredState.speedMetersPerSecond);
+        // SmartDashboard.putNumber("FL Desired State Velocity", frontLeftModule.desiredState.speedMetersPerSecond);
+        // SmartDashboard.putNumber("FR Desired State Velocity", frontRightModule.desiredState.speedMetersPerSecond);
+        // SmartDashboard.putNumber("BL Desired State Velocity", backLeftModule.desiredState.speedMetersPerSecond);
+        // SmartDashboard.putNumber("BR Desired State Velocity", backRightModule.desiredState.speedMetersPerSecond);
 
         SmartDashboard.putNumber("FL Turn Angle", frontLeftModule.getAngle());
         SmartDashboard.putNumber("FR Turn Angle", frontRightModule.getAngle());
         SmartDashboard.putNumber("BL Turn Angle", backLeftModule.getAngle());
         SmartDashboard.putNumber("BR Turn Angle", backRightModule.getAngle());
+
+        SmartDashboard.putNumber("FL Drive Supply Current", frontLeftModule.getDriveSupplyCurrent());
+        SmartDashboard.putNumber("FR Drive Supply Current", frontRightModule.getDriveSupplyCurrent());
+        SmartDashboard.putNumber("BL Drive Supply Current", backLeftModule.getDriveSupplyCurrent());
+        SmartDashboard.putNumber("BR Drive Supply Current", backRightModule.getDriveSupplyCurrent());
+
+        SmartDashboard.putNumber("FL Drive Stator Current", frontLeftModule.getDriveStatorCurrent());
+        SmartDashboard.putNumber("FR Drive Stator Current", frontRightModule.getDriveStatorCurrent());
+        SmartDashboard.putNumber("BL Drive Stator Current", backLeftModule.getDriveStatorCurrent());
+        SmartDashboard.putNumber("BR Drive Stator Current", backRightModule.getDriveStatorCurrent());
+
+
+        SmartDashboard.putNumber("FL Turn Supply Current", frontLeftModule.getTurnSupplyCurrent());
+        SmartDashboard.putNumber("FR Turn Supply Current", frontRightModule.getTurnSupplyCurrent());
+        SmartDashboard.putNumber("BL Turn Supply Current", backLeftModule.getTurnSupplyCurrent());
+        SmartDashboard.putNumber("BR Turn Supply Current", backRightModule.getTurnSupplyCurrent());
+
+        SmartDashboard.putNumber("FL Turn Stator Current", frontLeftModule.getTurnStatorCurrent());
+        SmartDashboard.putNumber("FR Turn Stator Current", frontRightModule.getTurnStatorCurrent());
+        SmartDashboard.putNumber("BL Turn Stator Current", backLeftModule.getTurnStatorCurrent());
+        SmartDashboard.putNumber("BR Turn Stator Current", backRightModule.getTurnStatorCurrent());
     }
 
 
